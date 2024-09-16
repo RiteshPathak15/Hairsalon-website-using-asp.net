@@ -129,21 +129,21 @@
     </style>
 </head>
 <body>
-    <form id="form1" runat="server">
+     <form id="form1" runat="server">
         <!-- Navigation Header -->
         <div class="navbar">
-      <div class="logo">Juice</div>
-               <div class="menu">
-    <a href="Home.aspx">Home</a>
-    <a href="ProductListing.aspx">Services</a>
-    <a href="ManageOrders.aspx">Order</a>
-    <a href="ShoppingCart.aspx">Checkout</a>
-    <a href="Home.aspx/#about">About Us</a>
-    <a href="Home.aspx/#contact">Contact Us</a>
-    <a href="Login.aspx">Sign Up</a>
-    <a href="Registration.aspx">Sign In</a>
-</div>
-  </div>
+            <div class="logo">Juice</div>
+            <div class="menu">
+                <a href="Home.aspx">Home</a>
+                <a href="ProductListing.aspx">Services</a>
+                <a href="ManageOrders.aspx">Order</a>
+                <a href="ShoppingCart.aspx">Checkout</a>
+                <a href="Home.aspx/#about">About Us</a>
+                <a href="Home.aspx/#contact">Contact Us</a>
+                <a href="Login.aspx">Sign Up</a>
+                <a href="Registration.aspx">Sign In</a>
+            </div>
+        </div>
 
         <div class="cart-container">
             <h2>Shopping Cart</h2>
@@ -169,25 +169,22 @@
                                 </td>
                                 <td><%# Eval("Total", "{0:C}") %></td>
                                 <td>
-                                    <asp:Button ID="RemoveButton" runat="server" Text="X" CommandArgument='<%# Eval("ProductID") %>' OnClick="RemoveFromCart_Click" CssClass="remove-button" />
+                                    <asp:Button ID="RemoveButton" runat="server" Text="Remove" CommandArgument='<%# Eval("ProductID") %>' OnClick="RemoveFromCart_Click" CssClass="remove-button" />
                                 </td>
                             </tr>
                         </ItemTemplate>
                     </asp:Repeater>
                 </tbody>
             </table>
-            <div class="apply-coupon">
-                <asp:TextBox ID="CouponTextBox" runat="server" Placeholder="Coupon code" />
-                <asp:Button ID="ApplyCouponButton" runat="server" Text="Apply Coupon" OnClick="ApplyCoupon_Click" />
-            </div>
+
             <div class="cart-summary">
-                <p>Subtotal:
-                    <asp:Label ID="SubtotalLabel" runat="server" Text="₹0.00" /></p>
+                <p>Subtotal: <asp:Label ID="SubtotalLabel" runat="server" Text="₹0.00" /></p>
                 <p>Shipping: Free Shipping</p>
-                <p>Total:
-                    <asp:Label ID="TotalLabel" runat="server" Text="₹0.00" /></p>
+                <p>Total: <asp:Label ID="TotalLabel" runat="server" Text="₹0.00" /></p>
             </div>
-            <asp:Button ID="CheckoutButton" runat="server" Text="Proceed to Checkout" OnClick="Checkout_Click" CssClass="checkout-button" />
+               <div class="checkout">
+            <asp:Button ID="CheckoutButton" runat="server" Text="Checkout" OnClick="CheckoutButton_Click" CssClass="checkout-button"/>
+        </div>
         </div>
     </form>
 </body>

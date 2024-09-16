@@ -17,7 +17,7 @@
         }
 
         .container {
-            display: flex; /* Use row direction to place image and form side by side */
+            display: flex;
             align-items: center;
             justify-content: center;
             width: 800px;
@@ -29,14 +29,14 @@
         }
 
         .form-container {
-            width: 50%; /* Keep the width for the form container */
+            width: 50%;
             padding: 20px;
         }
 
         .image-container {
-            width: 50%; /* Keep the width for the image container */
+            width: 50%;
             padding: 20px;
-            display: flex; /* Center the image vertically */
+            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -73,8 +73,8 @@
         }
 
         .image-container img {
-            width: 100%; /* Make the image responsive */
-            height: 90%; /* Ensure it fits within its container */
+            width: 100%;
+            height: 90%;
             border-radius: 10px;
         }
     </style>
@@ -82,12 +82,9 @@
 <body>
     <form id="form1" runat="server">
         <div class="container">
-            <!-- Image Section -->
             <div class="image-container">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpOt48H8ZkV57L-6-14UmlxRGv3KAIvN_tQg&s" alt="Registration Image" />
             </div>
-
-            <!-- Form Section -->
             <div class="form-container">
                 <h2>Registration Form</h2>
                 <div class="form-group">
@@ -117,6 +114,9 @@
                 </div>
                 <div class="form-group">
                     <asp:Button ID="RegisterButton" runat="server" Text="Register" CssClass="btn" OnClick="RegisterButton_Click" />
+                </div>
+                <div class="form-group">
+                    <asp:Label ID="ErrorMessage" runat="server" ForeColor="Red" />
                 </div>
                 <div class="form-group">
                     <asp:Label ID="Loginlink" runat="server" Text="Already have an account? "></asp:Label>

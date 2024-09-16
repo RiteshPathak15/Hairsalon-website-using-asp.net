@@ -239,20 +239,6 @@
             </p>
         </div>
 
-        <!-- Services Section -->
-        <div class="services">
-            <h2>Our Services</h2>
-            <asp:Repeater ID="ServiceRepeater" runat="server">
-                <ItemTemplate>
-                    <div class="service-card">
-                        <img src='<%# Eval("ImageUrl") %>' alt='<%# Eval("Title") %>' />
-                        <h3><%# Eval("Title") %></h3>
-                        <p><%# Eval("Description") %></p>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-        </div>
-
         <!-- Testimonials Section -->
         <div class="testimonials">
             <h2>What Our Clients Say</h2>
@@ -272,17 +258,20 @@
         <div id="contact" class="contact">
             <h2>Contact Us</h2>
             <div class="contact-form">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required />
+            <h2>Contact Us</h2>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required />
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
 
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
 
-                <button type="submit">Send Message</button>
-            </div>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <asp:Button ID="submitButton" runat="server" Text="Send Message" OnClick="SubmitForm_Click" />
+        </div>
+        <asp:Label ID="StatusLabel" runat="server" Text="" CssClass="status-message"></asp:Label>
         </div>
 
         <!-- Footer -->

@@ -7,13 +7,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
- background-color: #f0f0f0;
- background-image: url('images/Services-Mens.jpg');
- background-size: cover;
- background-position: center;
- background-repeat: no-repeat;
- height: 100vh;
- margin: 0;
+            background-color: #f0f0f0;
+            background-image: url('images/Services-Mens.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -22,7 +22,7 @@
         .container {
             display: flex;
             width: 800px;
-            height: 600px; /* Increased height */
+            height: 600px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -109,6 +109,9 @@
                 </div>
                 <div class="form-group">
                     <asp:Button ID="LoginButton" runat="server" Text="Login" CssClass="btn" OnClick="LoginButton_Click" />
+                </div>
+                <div class="form-group">
+                    <asp:Label ID="ErrorMessage" runat="server" ForeColor="Red" />
                 </div>
                 <div class="form-group">
                     <asp:HyperLink ID="RegisterLink" runat="server" Text="Don't have an account? Register here" NavigateUrl="Registration.aspx" />

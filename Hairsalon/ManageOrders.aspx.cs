@@ -1,45 +1,63 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 
-public partial class ManageOrders : System.Web.UI.Page
+namespace Hairsalon
 {
-    protected void Page_Load(object sender, EventArgs e)
+
+    public partial class ManageOrders : System.Web.UI.Page
     {
-        if (!IsPostBack)
+        protected void Page_Load(object sender, EventArgs e)
         {
-            LoadOrders();
+            if (!IsPostBack)
+            {
+                LoadOrders();
+            }
         }
-    }
 
-    private void LoadOrders()
-    {
-        // Simulating data for demonstration purposes
-        DataTable dt = new DataTable();
-        dt.Columns.Add("OrderId", typeof(int));
-        dt.Columns.Add("ProductName", typeof(string));
-        dt.Columns.Add("Quantity", typeof(int));
-        dt.Columns.Add("Price", typeof(decimal));
-        dt.Columns.Add("Status", typeof(string));
+        private void LoadOrders()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["hair_salon"].ConnectionString;
 
-        // Add some dummy data
-        dt.Rows.Add(1, "Shampoo", 2, 15.00, "Pending");
-        dt.Rows.Add(2, "Conditioner", 1, 10.00, "Shipped");
-        dt.Rows.Add(3, "Hair Oil", 3, 20.00, "Pending");
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Orders"; // Replace with your actual query to fetch orders
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
-        OrdersRepeater.DataSource = dt;
-        OrdersRepeater.DataBind();
-    }
+                OrdersRepeater.DataSource = dt;
+                OrdersRepeater.DataBind();
+            }
+        }
 
-    protected void CancelOrder_Click(object sender, EventArgs e)
-    {
-        Button btn = (Button)sender;
-        int orderId = Convert.ToInt32(btn.CommandArgument);
+        protected void CancelOrder_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            int orderId = Convert.ToInt32(btn.CommandArgument);
 
-        // Here, you would implement logic to cancel the order in your database
-        // For example, update the order status in your database
+            string connectionString = ConfigurationManager.ConnectionStrings["hair_salon"].ConnectionString;
 
-        // After canceling, reload the orders
-        LoadOrders();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "DELETE FROM Orders WHERE OrderId = @OrderId";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@OrderId", orderId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+
+            LoadOrders(); // Reload orders after deletion
+        }
+
+        protected void ConfirmBooking_Click(object sender, EventArgs e)
+        {
+            // Implement booking confirmation logic here
+            // For example, update the order status in your database
+        }
     }
 }

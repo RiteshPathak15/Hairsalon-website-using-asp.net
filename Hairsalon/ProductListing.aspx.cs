@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Web.UI.WebControls;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hairsalon
 {
@@ -9,53 +14,89 @@ namespace Hairsalon
         {
             if (!IsPostBack)
             {
-                BindServices();
-                BindProducts();
+                LoadProducts();
+                LoadServices();
             }
         }
 
-        private void BindServices()
+        private void LoadProducts()
         {
-            // Example data, replace with database call
-            var services = new List<Service>
+            string connectionString = ConfigurationManager.ConnectionStrings["hair_salon"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                new Service { Title = "Haircut", Description = "Professional haircut services.", ImageUrl = "https://cdn-ikppclh.nitrocdn.com/CueiRbtmHDfiLNmOiFYzPbGQWoFHcYmP/assets/images/optimized/rev-5c48b65/www.bodycraft.co.in/wp-content/uploads/beautiful-woman-getting-her-hair-cut-home-by-hairstylist-scaled.jpg" },
-                new Service { Title = "Shaving", Description = "Close and clean shave.", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt7RmE1Jmy6BUkuhwovS9efR58wMXiKof_Jw&s" },
-                new Service { Title = "Facial", Description = "Relaxing facial treatments.", ImageUrl = "https://media.istockphoto.com/id/1399469980/photo/close-up-portrait-of-anorganic-facial-mask-application-at-spa-salon-facial-treatment-skin.jpg?s=612x612&w=0&k=20&c=ZvZi_bdGLicsykUtlrHgQe70ftZzd_xPKvq2vzfOyV0=" }
-            };
-
-            ServiceRepeater.DataSource = services;
-            ServiceRepeater.DataBind();
+                string query = "SELECT * FROM Products";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                ProductRepeater.DataSource = dt;
+                ProductRepeater.DataBind();
+            }
         }
 
-        private void BindProducts()
+        private void LoadServices()
         {
-            // Example data, replace with database call
-            var products = new List<Product>
+            string connectionString = ConfigurationManager.ConnectionStrings["hair_salon"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                new Product { ProductName = "Shampoo", ProductDescription = "High-quality shampoo for daily use.", Price = 15.99m, ImageUrl = "https://www.thriveco.in/cdn/shop/files/COMBO1.jpg?v=1695724640" },
-                new Product { ProductName = "Conditioner", ProductDescription = "Moisturizing conditioner to keep your hair smooth.", Price = 12.99m, ImageUrl = "https://images-cdn.ubuy.co.in/639d62cda9b26763bf33484b-tresemme-conditioner-for-dry-hair.jpg" },
-                new Product { ProductName = "Beard Oil", ProductDescription = "Premium beard oil to maintain and nourish your beard.", Price = 9.99m, ImageUrl = "https://rukminim2.flixcart.com/image/850/1000/xif0q/hair-oil/l/s/u/32-ultra-bread-growth-oil-for-men-nioon-original-imaggey24hjxnyfv.jpeg?q=90&crop=false" }
-            };
-
-            ProductRepeater.DataSource = products;
-            ProductRepeater.DataBind();
+                string query = "SELECT * FROM Services";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                ServiceRepeater.DataSource = dt;
+                ServiceRepeater.DataBind(); // Bind services to Repeater
+            }
         }
 
-    }
+        protected void AddToCart_Click(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            var productId = Convert.ToInt32(button.CommandArgument);
 
-    public class Service
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
-    }
+            // Retrieve the product details from the database
+            string connectionString = ConfigurationManager.ConnectionStrings["hair_salon"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Products WHERE ProductID = @ProductID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ProductID", productId);
 
-    public class Product
-    {
-        public string ProductName { get; set; }
-        public string ProductDescription { get; set; }
-        public decimal Price { get; set; }
-        public string ImageUrl { get; set; }
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var product = new CartItem
+                    {
+                        ProductID = Convert.ToInt32(reader["ProductID"]),
+                        ProductName = reader["ProductName"].ToString(),
+                        Price = Convert.ToDecimal(reader["Price"]),
+                        Quantity = 1, // Default quantity
+                        Total = Convert.ToDecimal(reader["Price"]) // Default total
+                    };
+
+                    // Retrieve the cart from session
+                    var cart = (List<CartItem>)Session["Cart"] ?? new List<CartItem>();
+
+                    // Check if the product is already in the cart
+                    var existingItem = cart.FirstOrDefault(item => item.ProductID == product.ProductID);
+                    if (existingItem != null)
+                    {
+                        existingItem.Quantity++;
+                        existingItem.Total = existingItem.Price * existingItem.Quantity;
+                    }
+                    else
+                    {
+                        cart.Add(product);
+                    }
+
+                    // Save the cart back to the session
+                    Session["Cart"] = cart;
+                }
+                conn.Close();
+            }
+
+            // Redirect to ShoppingCart.aspx
+            Response.Redirect("ShoppingCart.aspx");
+        }
     }
 }
