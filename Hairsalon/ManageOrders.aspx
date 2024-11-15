@@ -178,7 +178,7 @@
         </div>
 
         <!-- Confirm Booking Button -->
-        <div style="text-align: center; margin-top: 20px;">
+        <div style="text-align: center;visibility:hidden; margin-top: 20px;">
             <asp:Button ID="ConfirmBookingButton" runat="server" Text="Confirm Booking"
                 CssClass="confirm-button" OnClientClick="return showConfirmationAlert();" OnClick="ConfirmBooking_Click" />
         </div>
